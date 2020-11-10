@@ -1,72 +1,85 @@
-const inquirer = require('inquirer');
-const fs = require('fs');
-//const generate = require('./utils/generateMarkdown');
+const inquirer = require("inquirer");
+const fs = require("fs");
+const generateMD = require("./utils/generateMarkdown.js");
 // array of questions for user
-const questions = [
+const questions = () => {
+    return inquirer.prompt( [
         {
-        type: 'input',
-        message: 'What is your user name?',
-        name: 'name',
+            type: "input",
+            message: "What is your project Title to be?",
+            name: "title",
         },
         {
-        type: 'input',
-        message: 'What is your location?',
-        name: 'location',
+            type: "input",
+            message: "What is the description title of your readme?",
+            name: "description",
         },
         {
-        type: 'input',
-        message: 'Please enter your bio.',
-        name: 'bio',
-         },  
-        {
-        type: 'input',
-        message: 'What is your GitHub link?',
-        name: 'github',
+            type: "input",
+            message: "What are you installation instructions?",
+            name: "installationInstructions",
         },
         {
-        type: 'input',
-        message: 'What is your LinkedIn link?',
-        name: 'linkedin',
+            type: "input",
+            message: "What usage information would you like to include?",
+            name: "usageInformation",           
         },
-];
-// inquirer
-//     .prompt([
-//             {
-//             type: 'input',
-//             message: 'What is your user name?',
-//             name: 'name',
-//             },
-//             {
-//             type: 'input',
-//             message: 'What is your location?',
-//             name: 'location',
-//             },
-//             {
-//             type: 'input',
-//             message: 'Please enter your bio.',
-//             name: 'bio',
-//              },  
-//             {
-//             type: 'input',
-//             message: 'What is your GitHub link?',
-//             name: 'github',
-//             },
-//             {
-//             type: 'input',
-//             message: 'What is your LinkedIn link?',
-//             name: 'linkedin',
-//             },
-//     ]);
-// +
+        {
+            type: "input",
+            message: "Insert contribution guidelines.",
+            name: "contributionGuidelines",            
+        },
+        {
+            type: "input",
+            message: "Input test instructions?",
+            name: "testInstructions",
+        },
+        {
+            type: "list",
+            message: "What license would you like?",
+            name: "license",
+            choices: [
+                "MIT",
+                "IBM",
+                "ISC",
+                "Mozilla",
+            ]
 
+        },
+        {
+            type: "input",
+            message: "What is your Github username?",
+            name: "github",
+
+        },
+        {
+            type: "input",
+            message: "What is your email address?",
+            name: "email",
+
+        },     
+    ]);
+
+}
 // function to write README file
 function writeToFile(fileName, data) {
-    fs.writeToFile()
+    fs.writeToFile( fileName+ '.md', data, (err) => {
+        err ? console.log(err) : console.log("Success!")
+    })
+   
 }
 
 // function to initialize program
-function init() {
-
+const init = async() => {
+    console.log(writeToFile) 
+    try {
+        const answers = await questions();
+        const md = generateMD(answers);
+        await fs.writeFileSync('README.md', md)
+        console.log("Successful README.md generated!")
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 // function call to initialize program
