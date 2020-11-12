@@ -1,18 +1,18 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
 const generateMD = require("./utils/generateMarkdown.js");
+
 // array of questions for user
-const questions = () => {
-    return inquirer.prompt( [
+const questions = [
         {
             type: "input",
-            message: "What is your project Title to be?",
+            message: "What is your project Title?",
             name: "title",
         },
         {
             type: "input",
-            message: "What is the description title of your readme?",
-            name: "description",
+            message: "What is your user story",
+            name: "userStory",
         },
         {
             type: "input",
@@ -31,7 +31,7 @@ const questions = () => {
         },
         {
             type: "input",
-            message: "Input test instructions?",
+            message: "What are your test instructions for the project?",
             name: "testInstructions",
         },
         {
@@ -43,6 +43,7 @@ const questions = () => {
                 "IBM",
                 "ISC",
                 "Mozilla",
+                "No License"
             ]
 
         },
@@ -58,26 +59,28 @@ const questions = () => {
             name: "email",
 
         },     
-    ]);
+];
 
-}
+
 // function to write README file
 function writeToFile(fileName, data) {
-    fs.writeToFile( fileName+ '.md', data, (err) => {
-        err ? console.log(err) : console.log("Success!")
+    fs.writeToFile( fileName, data, (err) => {
+        if(err){
+            console.log(err)
+        }
     })
    
 }
 
 // function to initialize program
-const init = async() => {
-    console.log(writeToFile) 
+function init() {
     try {
-        const answers = await questions();
-        const md = generateMD(answers);
-        await fs.writeFileSync('README.md', md)
-        console.log("Successful README.md generated!")
-    } catch (err) {
+        inquirer.prompt(questions).then((answers) =>{
+            console.log("README file creation has started");
+            writeToFile('GeneratedREADME.md', generateMD(answers));
+            console.log("README file succesfully created");
+        })
+    }catch(err) {
         console.log(err)
     }
 }
