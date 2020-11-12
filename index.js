@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
-const generateMD = require("./utils/generateMarkdown.js");
+const generateMarkdown = require("./utils/generateMarkdown");
 
 // array of questions for user
 const questions = [
@@ -11,13 +11,13 @@ const questions = [
         },
         {
             type: "input",
-            message: "What is your user story",
-            name: "userStory",
+            message: "Please describe your project.",
+            name: "descritption",
         },
         {
             type: "input",
             message: "What are you installation instructions?",
-            name: "installationInstructions",
+            name: "installation",
         },
         {
             type: "input",
@@ -27,23 +27,23 @@ const questions = [
         {
             type: "input",
             message: "Insert contributors.",
-            name: "contributionGuidelines",            
+            name: "contribution",  
+            default: "N/A"          
         },
         {
             type: "input",
             message: "What are your test instructions for the project?",
             name: "testInstructions",
+            default : "N/A"
         },
         {
             type: "list",
             message: "What license would you like?",
             name: "license",
             choices: [
-                "MIT",
-                "IBM",
-                "ISC",
-                "Mozilla",
-                "No License"
+                'MIT',
+                'Apache',
+                'Creative Commons',
             ]
 
         },
@@ -64,25 +64,14 @@ const questions = [
 
 // function to write README file
 function writeToFile(fileName, data) {
-    fs.writeToFile( fileName, data, (err) => {
-        if(err){
-            console.log(err)
-        }
-    })
-   
+    fs.writeFile(fileName , data , err => err ? console.error(err) : console.log("Success!"));
 }
 
 // function to initialize program
 function init() {
-    try {
-        inquirer.prompt(questions).then((answers) =>{
-            console.log("README file creation has started");
-            writeToFile('GeneratedREADME.md', generateMD(answers));
-            console.log("README file succesfully created");
-        })
-    }catch(err) {
-        console.log(err)
-    }
+   inquirer
+    .prompt(questions)
+    .then((answers) => writeToFile("./examples/README.md",generateMarkdown(answers))) 
 }
 
 // function call to initialize program
